@@ -74,6 +74,7 @@ public class Board
 
     internal void Fill()
     {
+        beginData = new();
         for (int x = 0; x < boardSizeX; x++)
         {
             for (int y = 0; y < boardSizeY; y++)
@@ -100,12 +101,35 @@ public class Board
                     }
                 }
 
-                item.SetType(Utils.GetRandomNormalTypeExcept(types.ToArray()));
+                NormalItem.eNormalType finalType = Utils.GetRandomNormalTypeExcept(types.ToArray());
+                item.SetType(finalType); beginData.Add(finalType);
                 item.SetView();
                 item.SetViewRoot(m_root);
 
                 cell.Assign(item);
                 cell.ApplyItemPosition(false);
+            }
+        }
+    }
+    List<NormalItem.eNormalType> beginData = new(); int curson = 0;
+    internal void ReFillWithBeginData()
+    {
+        curson = 0;
+        for (int x = 0; x < boardSizeX; x++)
+        {
+            for (int y = 0; y < boardSizeY; y++)
+            {
+                Cell cell = m_cells[x, y];
+                NormalItem item = new NormalItem();
+                NormalItem.eNormalType finalType = beginData[curson];
+                item.SetType(finalType); 
+                item.SetView();
+                item.SetViewRoot(m_root);
+
+                cell.Assign(item);
+                cell.ApplyItemPosition(false);
+
+                curson++;
             }
         }
     }

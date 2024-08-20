@@ -80,9 +80,10 @@ public class GameManager : MonoBehaviour
             DOTween.PlayAll();
         }
     }
-
+    eLevelMode _curMode;
     public void LoadLevel(eLevelMode mode)
     {
+        _curMode = mode;
         m_boardController = new GameObject("BoardController").AddComponent<BoardController>();
         m_boardController.StartGame(this, m_gameSettings);
 
@@ -101,6 +102,26 @@ public class GameManager : MonoBehaviour
 
         State = eStateGame.GAME_STARTED;
     }
+    public void RestartLevel()
+    {
+        m_boardController.RestartGame();
+
+        if (_curMode == eLevelMode.MOVES)
+        {
+            m_levelCondition = this.gameObject.GetComponent<LevelMoves>();
+            m_levelCondition.Setup(m_gameSettings.LevelMoves, m_uiMenu.GetLevelConditionView(), m_boardController);
+        }
+        else if (_curMode == eLevelMode.TIMER)
+        {
+            m_levelCondition = this.gameObject.GetComponent<LevelTime>();
+            m_levelCondition.Setup(m_gameSettings.LevelMoves, m_uiMenu.GetLevelConditionView(), this);
+        }
+        //
+        //m_levelCondition.ConditionCompleteEvent += GameOver;
+        //
+        //State = eStateGame.GAME_STARTED;
+    }
+
 
     public void GameOver()
     {

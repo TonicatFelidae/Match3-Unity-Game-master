@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5156bbf7662b15a48a9c1e519ab49b9b, type: 3}
   m_Name: ThemeNexus
   m_EditorClassIdentifier: 
-  itemReskinData: {fileID: 0}
+  itemReskinData: {fileID: 11400000, guid: 945da71717b927e41a5d367083b64c66, type: 2}

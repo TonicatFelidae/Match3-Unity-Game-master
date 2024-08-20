@@ -46,9 +46,20 @@ public class BoardController : MonoBehaviour
         Fill();
     }
 
+    public void RestartGame()
+    {
+        ReStartAndFill();
+    }
+
     private void Fill()
     {
         m_board.Fill();
+        FindMatchesAndCollapse();
+    }
+    private void ReStartAndFill()
+    {
+        m_board.ExplodeAllItems();
+        m_board.ReFillWithBeginData();
         FindMatchesAndCollapse();
     }
 
