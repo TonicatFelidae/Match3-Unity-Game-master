@@ -23,6 +23,7 @@ public class Board
     private Cell[,] m_cells;
 
     private Transform m_root;
+    private List<NormalItem.eNormalType> beginData = new(); int curson = 0;
 
     private int m_matchMin;
     private int[] typeCounter = new int[7]; 
@@ -116,7 +117,6 @@ public class Board
             }
         }
     }
-    List<NormalItem.eNormalType> beginData = new(); int curson = 0;
     internal void ReFillWithBeginData()
     {
         curson = 0;
@@ -252,6 +252,17 @@ public class Board
             {
                 Cell cell = m_cells[x, y];
                 cell.ExplodeItem();
+            }
+        }
+    }
+    internal void ClearAllItems()
+    {
+        for (int x = 0; x < boardSizeX; x++)
+        {
+            for (int y = 0; y < boardSizeY; y++)
+            {
+                Cell cell = m_cells[x, y];
+                cell.Clear();
             }
         }
     }

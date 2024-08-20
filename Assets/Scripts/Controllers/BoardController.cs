@@ -58,7 +58,7 @@ public class BoardController : MonoBehaviour
     }
     private void ReStartAndFill()
     {
-        m_board.ExplodeAllItems();
+        m_board.ClearAllItems();
         m_board.ReFillWithBeginData();
         FindMatchesAndCollapse();
     }
