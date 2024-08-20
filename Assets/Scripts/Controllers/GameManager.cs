@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using ET;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -54,7 +55,6 @@ public class GameManager : MonoBehaviour
         m_uiMenu = FindObjectOfType<UIMainManager>();
         m_uiMenu.Setup(this);
     }
-
     void Start()
     {
         State = eStateGame.MAIN_MENU;

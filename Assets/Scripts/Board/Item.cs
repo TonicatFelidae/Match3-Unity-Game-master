@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using ET;
 
 [Serializable]
 public class Item
@@ -18,11 +19,8 @@ public class Item
 
         if (!string.IsNullOrEmpty(prefabname))
         {
-            GameObject prefab = Resources.Load<GameObject>(prefabname);
-            if (prefab)
-            {
-                View = GameObject.Instantiate(prefab).transform;
-            }
+            View = ETPoolManager.Instance.GetObjectFromPool<Transform>(prefabname, 20);
+            View.localScale = Vector3.one;
         }
     }
 
@@ -101,7 +99,7 @@ public class Item
             View.DOScale(0.1f, 0.1f).OnComplete(
                 () =>
                 {
-                    GameObject.Destroy(View.gameObject);
+                    ETPoolManager.Instance.ReturnObjectToPool<Transform>(View);
                     View = null;
                 }
                 );
@@ -132,7 +130,7 @@ public class Item
 
         if (View)
         {
-            GameObject.Destroy(View.gameObject);
+            ETPoolManager.Instance.ReturnObjectToPool<Transform>(View);
             View = null;
         }
     }

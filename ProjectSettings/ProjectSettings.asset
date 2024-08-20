@@ -158,7 +158,7 @@ PlayerSettings:
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
     Android: com.NumberValley.Match3UnityGame
-    Standalone: com.Company.ProductName
+    Standalone: com.NumberValley.Match3-Unity-Game
     iPhone: com.NumberValley.Match3UnityGame
   buildNumber:
     Standalone: 0
