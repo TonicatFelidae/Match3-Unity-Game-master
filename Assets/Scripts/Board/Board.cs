@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using UnityEngine;
 
@@ -174,9 +175,8 @@ public class Board
             {
                 Cell cell = m_cells[x, y];
                 if (!cell.IsEmpty) continue;
-
                 NormalItem item = new NormalItem();
-                NormalItem.eNormalType finalType = Utils.GetRandomNormalType();
+                NormalItem.eNormalType finalType = GetSuitableFillGapsItemType(cell);
                 item.SetType(finalType);
                 typeCounter[(int)finalType]++;
                 item.SetView();
@@ -187,11 +187,48 @@ public class Board
             }
         }
     }
+    internal NormalItem.eNormalType GetSuitableFillGapsItemType(Cell cell)
+    {
+        List<NormalItem.eNormalType> aTypeList = new List<NormalItem.eNormalType>();
+        //get list of defferent types to filteredList
+        if (cell.NeighbourLeft != null)
+        {
+            AddTypeAdjectiveCell(cell.NeighbourRight);
+            AddTypeAdjectiveCell(cell.NeighbourLeft);
+            AddTypeAdjectiveCell(cell.NeighbourBottom);
+            AddTypeAdjectiveCell(cell.NeighbourUp);
+        }
+        List<NormalItem.eNormalType> allItems = Enum.GetValues(typeof(NormalItem.eNormalType)).Cast<NormalItem.eNormalType>().ToList();
+        List<NormalItem.eNormalType> filteredList = allItems.Where(item => !aTypeList.Contains(item)).ToList();
+        //get least item on board from filteredList
+        int retID = 0;
+        int leastCount = typeCounter[(int)filteredList[0]];
+        for (int i = 1; i < filteredList.Count; i++)
+        {
+            if(typeCounter[(int)filteredList[i]] < typeCounter[(int)filteredList[retID]])
+            {
+                leastCount = typeCounter[(int)filteredList[retID]];
+                retID = i;
+            }
+        }
+        return filteredList[retID];
 
+
+        void AddTypeAdjectiveCell(Cell aCell)
+        {
+            if (aCell != null)
+            {
+                NormalItem nitem = aCell.Item as NormalItem;
+                if (nitem != null)
+                {
+                    aTypeList.Add(nitem.ItemType);
+                }
+            }
+        }
+    }
     internal void OnItemExplode(NormalItem.eNormalType finalType)
     {
         typeCounter[(int)finalType]--;
-        Debug.Log(GetLeastAmountType());
     }
     internal int GetLeastAmountType()
     {
