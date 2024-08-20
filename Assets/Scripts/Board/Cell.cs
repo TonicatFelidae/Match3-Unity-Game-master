@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Cell : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class Cell : MonoBehaviour
 
     public Cell NeighbourLeft { get; set; }
 
+    public UnityEvent<NormalItem.eNormalType> onItemExplode = new();
 
     public bool IsEmpty => Item == null;
 
@@ -71,6 +73,7 @@ public class Cell : MonoBehaviour
     internal void ExplodeItem()
     {
         if (Item == null) return;
+        if (Item is NormalItem) onItemExplode?.Invoke((Item as NormalItem).ItemType);
 
         Item.ExplodeView();
         Item = null;

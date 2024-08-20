@@ -18,6 +18,8 @@ public class LevelMoves : LevelCondition
 
         m_board = board;
 
+        m_board.OnMoveEvent -= OnMove;
+
         m_board.OnMoveEvent += OnMove;
 
         UpdateText();

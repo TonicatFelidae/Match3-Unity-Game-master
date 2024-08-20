@@ -24,6 +24,7 @@ public class Board
     private Transform m_root;
 
     private int m_matchMin;
+    private int[] typeCounter = new int[7]; 
 
     public Board(Transform transform, GameSettings gameSettings)
     {
@@ -53,8 +54,9 @@ public class Board
 
                 Cell cell = go.GetComponent<Cell>();
                 cell.Setup(x, y);
-
-                m_cells[x, y] = cell;
+                cell.onItemExplode.RemoveAllListeners();
+                cell.onItemExplode.AddListener(OnItemExplode);
+               m_cells[x, y] = cell;
             }
         }
 
@@ -75,6 +77,7 @@ public class Board
     internal void Fill()
     {
         beginData = new();
+        typeCounter = new int[7];
         for (int x = 0; x < boardSizeX; x++)
         {
             for (int y = 0; y < boardSizeY; y++)
@@ -102,6 +105,7 @@ public class Board
                 }
 
                 NormalItem.eNormalType finalType = Utils.GetRandomNormalTypeExcept(types.ToArray());
+                typeCounter[(int)finalType]++;
                 item.SetType(finalType); beginData.Add(finalType);
                 item.SetView();
                 item.SetViewRoot(m_root);
@@ -115,6 +119,7 @@ public class Board
     internal void ReFillWithBeginData()
     {
         curson = 0;
+        typeCounter = new int[7];
         for (int x = 0; x < boardSizeX; x++)
         {
             for (int y = 0; y < boardSizeY; y++)
@@ -122,6 +127,7 @@ public class Board
                 Cell cell = m_cells[x, y];
                 NormalItem item = new NormalItem();
                 NormalItem.eNormalType finalType = beginData[curson];
+                typeCounter[(int)finalType]++;
                 item.SetType(finalType); 
                 item.SetView();
                 item.SetViewRoot(m_root);
@@ -170,8 +176,9 @@ public class Board
                 if (!cell.IsEmpty) continue;
 
                 NormalItem item = new NormalItem();
-
-                item.SetType(Utils.GetRandomNormalType());
+                NormalItem.eNormalType finalType = Utils.GetRandomNormalType();
+                item.SetType(finalType);
+                typeCounter[(int)finalType]++;
                 item.SetView();
                 item.SetViewRoot(m_root);
 
@@ -181,6 +188,25 @@ public class Board
         }
     }
 
+    internal void OnItemExplode(NormalItem.eNormalType finalType)
+    {
+        typeCounter[(int)finalType]--;
+        Debug.Log(GetLeastAmountType());
+    }
+    internal int GetLeastAmountType()
+    {
+        int ret = 0;
+        int leastCount = typeCounter[0];
+        for (int x = 1;x < 7; x++)
+        {
+            if( typeCounter[x] < leastCount)
+            {
+                leastCount = typeCounter[x];
+                ret = x;
+            }
+        }
+        return ret;
+    }
     internal void ExplodeAllItems()
     {
         for (int x = 0; x < boardSizeX; x++)
